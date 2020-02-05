@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Listado de Utiles</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+    <div class="container">
+        
+        <div id="lista-compras">
+        
+            <div class="header">
+                <h2>  {{ header.toLocaleUpperCase() }}</h2>  
+                <button v-if="estado === 'default'" @click="CambiarEstado('edit')"class="btn btn-primary">Agregar</button>
+                <button v-else class="btn btn-warning" @click="CambiarEstado('default')"> Cancelar</button>
+            </div>
+            <div v-if="estado === 'edit'">
+    
+                <input class="" type="text" placeholder="Agregar nuevo" 
+                v-model="newUtil" @keyup.enter="Agregar">
+                <button class="btn btn-primary" v-bind:disabled="newUtil.length === 0" @click="Agregar" >Agregar</button>
+            </div>
+            
+            
+            <ul>
+                <li v-for="ele in listarReversa"  :class="{tachado : ele.comprado}"
+                @click="cambiarEstadoDeCompra(ele)">
+                    {{ ele.uti }}
+                </li>
+            </ul>
+            <div v-if="utiles.length === 0">
+
+                <p > No existen elementos en la lista.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script src="vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#lista-compras',
+            data: {
+                header: 'Listado de Útiles',
+                newUtil: '',
+                estado: 'default',
+                utiles:[
+                    {
+                        uti:'10 cuadernos',  
+                        comprado: true                      
+                    },
+                    {
+                        uti: '15 lapices',
+                        comprado: true                      
+                    },
+                    {
+                        uti: '5 cajas de colores',
+                        comprado: false                      
+                    }
+                    /*
+                    '10 cuadernos',
+                    '15 lápices',
+                    '5 ajas de colores'
+                    */
+                ]
+            },
+            computed:{
+                listarReversa:function(){
+                    return this.utiles.slice(0).reverse();
+                }
+            },
+            methods:{
+                Agregar:function(){
+                    if(this.newUtil === '')
+                        return;
+
+                    this.utiles.push({
+                        uti: this.newUtil,
+                        comprado: false
+                    });
+                    this.Limpiar();
+                },
+                CambiarEstado:function(nuevoEstado){
+                    this.estado = nuevoEstado;
+                    this.newUtil = ''
+                },
+                cambiarEstadoDeCompra:function(util){
+                    util.comprado = !util.comprado;
+                },
+                Limpiar:function(){
+                    this.newUtil = '';
+                }
+                
+            } 
+        });
+    </script>
+</body>
+
+</html>
